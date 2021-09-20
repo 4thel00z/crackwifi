@@ -14,6 +14,8 @@ plumbum = "^1.7.0"
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
 pytest = "^6.2.5"
+ptpython = "^3.0.20"
+neovim = "^0.3.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
