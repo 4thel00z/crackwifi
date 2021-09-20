@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "crackwifi"
+version = "0.1.0"
+description = "Automate cracking wifis using reaver"
+authors = ["4thel00z <4thel00z@gmail.com>"]
+license = "GPL-3"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+plumbum = "^1.7.0"
+
+[tool.poetry.dev-dependencies]
+black = "^21.9b0"
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
