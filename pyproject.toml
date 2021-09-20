@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Automate cracking wifis using reaver"
 authors = ["4thel00z <4thel00z@gmail.com>"]
 license = "GPL-3"
+readme = "README.md"
+homepage = "https://github.com/4thel00z/crackwifi"
 
 [tool.poetry.dependencies]
 python = "^3.7"
