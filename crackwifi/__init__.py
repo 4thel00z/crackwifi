@@ -105,8 +105,3 @@ def dump_networks(n: int = 10, interface: str = "wlan0mon") -> typing.Dict[str, 
         if len(networks) >= n:
             break
     return networks
-
-
-if __name__ == '__main__':
-    with monitor("wlx6cfdb9b29a25"):
-        networks = dump_networks(10)
