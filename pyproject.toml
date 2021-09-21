@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crackwifi"
-version = "0.1.0"
+version = "0.1.1"
 description = "Automate cracking wifis using reaver"
 authors = ["4thel00z <4thel00z@gmail.com>"]
 license = "GPL-3"
